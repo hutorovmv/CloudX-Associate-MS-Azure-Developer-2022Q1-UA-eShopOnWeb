@@ -16,15 +16,23 @@ public class OrderService : IOrderService
     private readonly IRepository<Basket> _basketRepository;
     private readonly IRepository<CatalogItem> _itemRepository;
 
+    private readonly IShopBusService _shopBusService;
+    private readonly IOrderItemsResolverTriggerService _orderItemsResolverTriggerService;
+
     public OrderService(IRepository<Basket> basketRepository,
         IRepository<CatalogItem> itemRepository,
         IRepository<Order> orderRepository,
-        IUriComposer uriComposer)
+        IUriComposer uriComposer, 
+        IShopBusService shopBusService,
+        IOrderItemsResolverTriggerService orderItemsResolverTriggerService)
     {
         _orderRepository = orderRepository;
         _uriComposer = uriComposer;
         _basketRepository = basketRepository;
         _itemRepository = itemRepository;
+
+        _shopBusService = shopBusService;
+        _orderItemsResolverTriggerService = orderItemsResolverTriggerService;
     }
 
     public async Task CreateOrderAsync(int basketId, Address shippingAddress)
@@ -49,5 +57,10 @@ public class OrderService : IOrderService
         var order = new Order(basket.BuyerId, shippingAddress, items);
 
         await _orderRepository.AddAsync(order);
+
+        await _orderItemsResolverTriggerService.TriggerOrderItemsBlobResolver(order);
+        await _orderItemsResolverTriggerService.TriggerOrderItemsCosmosDbResolver(order);
+
+        _shopBusService.EnqueueOrderForUpload(order);
     }
 }
