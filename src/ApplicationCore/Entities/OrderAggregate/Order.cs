@@ -48,4 +48,6 @@ public class Order : BaseEntity, IAggregateRoot
         }
         return total;
     }
+
+    public decimal TotalPrice => this.Total();
 }
