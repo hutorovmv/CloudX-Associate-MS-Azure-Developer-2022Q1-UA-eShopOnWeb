@@ -12,14 +12,14 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services;
 
 public class OrderItemsResolverTriggerService : IOrderItemsResolverTriggerService
 {
-    private readonly OrderSubmitFunctionsConfigurationModel configurationModel;
+    private readonly EShopOnWebFunctionsConfigurationModel configurationModel;
     private readonly HttpClient httpClient;
 
     private const string FunctionKeyHeaderName = "x-functions-key";
 
     public OrderItemsResolverTriggerService(IConfiguration configuration)
     {
-        this.configurationModel = configuration.GetSection("OrderSubmitFunctions").Get<OrderSubmitFunctionsConfigurationModel>();
+        this.configurationModel = configuration.GetSection("OrderSubmitFunctions").Get<EShopOnWebFunctionsConfigurationModel>();
 
         this.httpClient = new HttpClient();
         this.httpClient.BaseAddress = new Uri(configurationModel.BaseUrl);
@@ -34,12 +34,12 @@ public class OrderItemsResolverTriggerService : IOrderItemsResolverTriggerServic
         );
     }
 
-    public async Task TriggerOrderItemsCosmosDbResolver(Order order)
+    public async Task TriggerDeliveryItemsProcessor(Order order)
     {
         await this.TriggerHttpOrderItemsResolver(
             order,
-            configurationModel.OrderItemsCosmosDbResolver.Endpoint,
-            configurationModel.OrderItemsCosmosDbResolver.Key
+            configurationModel.DeliveryItemsProcessor.Endpoint,
+            configurationModel.DeliveryItemsProcessor.Key
         );
     }
 

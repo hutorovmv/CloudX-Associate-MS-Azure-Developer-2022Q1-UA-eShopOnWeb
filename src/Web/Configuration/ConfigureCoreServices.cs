@@ -18,6 +18,8 @@ public static class ConfigureCoreServices
         services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
         services.AddScoped<IBasketService, BasketService>();
+        services.AddScoped<IOrderItemsResolverTriggerService, OrderItemsResolverTriggerService>();
+        services.AddScoped<IShopBusService, ShopBusService>();
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IBasketQueryService, BasketQueryService>();
         services.AddSingleton<IUriComposer>(new UriComposer(configuration.Get<CatalogSettings>()));

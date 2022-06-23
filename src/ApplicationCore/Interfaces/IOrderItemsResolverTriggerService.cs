@@ -6,5 +6,5 @@ public interface IOrderItemsResolverTriggerService
 {
     Task TriggerOrderItemsBlobResolver(Order order);
 
-    Task TriggerOrderItemsCosmosDbResolver(Order order);
+    Task TriggerDeliveryItemsProcessor(Order order);
 }

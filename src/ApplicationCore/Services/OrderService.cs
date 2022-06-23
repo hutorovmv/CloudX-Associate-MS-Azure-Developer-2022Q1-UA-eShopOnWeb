@@ -16,6 +16,7 @@ public class OrderService : IOrderService
     private readonly IRepository<Basket> _basketRepository;
     private readonly IRepository<CatalogItem> _itemRepository;
 
+    private readonly IAppLogger<OrderService> _logger;
     private readonly IShopBusService _shopBusService;
     private readonly IOrderItemsResolverTriggerService _orderItemsResolverTriggerService;
 
@@ -24,7 +25,8 @@ public class OrderService : IOrderService
         IRepository<Order> orderRepository,
         IUriComposer uriComposer, 
         IShopBusService shopBusService,
-        IOrderItemsResolverTriggerService orderItemsResolverTriggerService)
+        IOrderItemsResolverTriggerService orderItemsResolverTriggerService,
+        IAppLogger<OrderService> logger)
     {
         _orderRepository = orderRepository;
         _uriComposer = uriComposer;
@@ -33,6 +35,8 @@ public class OrderService : IOrderService
 
         _shopBusService = shopBusService;
         _orderItemsResolverTriggerService = orderItemsResolverTriggerService;
+
+        _logger = logger;
     }
 
     public async Task CreateOrderAsync(int basketId, Address shippingAddress)
@@ -56,11 +60,15 @@ public class OrderService : IOrderService
 
         var order = new Order(basket.BuyerId, shippingAddress, items);
 
+        _logger.LogInformation($"Save order with id: {order.Id}");
         await _orderRepository.AddAsync(order);
 
-        await _orderItemsResolverTriggerService.TriggerOrderItemsBlobResolver(order);
-        await _orderItemsResolverTriggerService.TriggerOrderItemsCosmosDbResolver(order);
+        // _logger.LogInformation($"Trigger OrderItemsBlobResolver for order id: {order.Id}");
+        // await _orderItemsResolverTriggerService.TriggerOrderItemsBlobResolver(order);
+        _logger.LogInformation($"Trigger OrderItemsCosmosDbResolver for order id: {order.Id}");
+        await _orderItemsResolverTriggerService.TriggerDeliveryItemsProcessor(order);
 
+        _logger.LogInformation($"Add to the orders topic order with id: {order.Id}");
         _shopBusService.EnqueueOrderForUpload(order);
     }
 }

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Microsoft.eShopWeb.Infrastructure.Services;
 
-internal class ShopBusService : IDisposable, IShopBusService
+public class ShopBusService : IDisposable, IShopBusService
 {
     private readonly ServiceBusConfigurationModel configurationModel;
     private readonly ServiceBusClient client;
@@ -25,7 +25,7 @@ internal class ShopBusService : IDisposable, IShopBusService
         var sender = client.CreateSender(configurationModel.OrdersTopic.Name);
         var orderJson = JsonConvert.SerializeObject(order);
 
-        var message = new ServiceBusMessage()
+        var message = new ServiceBusMessage(orderJson)
         {
             Subject = configurationModel.OrdersTopic.UploadSubscription.MessageSubject
         };

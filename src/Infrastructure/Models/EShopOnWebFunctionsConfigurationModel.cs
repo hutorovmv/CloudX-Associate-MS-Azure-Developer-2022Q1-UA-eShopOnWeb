@@ -2,9 +2,9 @@
 
 namespace Microsoft.eShopWeb.Infrastructure.Models;
 
-internal class OrderSubmitFunctionsConfigurationModel : FunctionsAppConfigurationModel
+internal class EShopOnWebFunctionsConfigurationModel : FunctionsAppConfigurationModel
 {
     public FunctionConfigurationModel OrderItemsBlobResolver { get; set; }
 
-    public FunctionConfigurationModel OrderItemsCosmosDbResolver { get; set; }
+    public FunctionConfigurationModel DeliveryItemsProcessor { get; set; }
 }
