@@ -5,9 +5,9 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using OrderSubmitFunctions.Services;
+using eShopOnWebFunctions.Services;
 
-namespace OrderSubmitFunctions;
+namespace eShopOnWebFunctions;
 
 public static class OrderItemsBlobResolver
 {

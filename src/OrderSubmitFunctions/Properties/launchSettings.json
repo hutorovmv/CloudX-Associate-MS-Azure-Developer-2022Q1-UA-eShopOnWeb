@@ -3,7 +3,13 @@
     "OrderSubmitFunctions": {
       "commandName": "Project",
       "commandLineArgs": "--port 7084",
-      "launchBrowser": false
+      "remoteDebugEnabled": false
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 31679,
+      "useSSL": false
     }
   }
 }

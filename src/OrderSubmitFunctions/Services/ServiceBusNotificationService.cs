@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Logging;
 
-namespace OrderSubmitFunctions.Services;
+namespace eShopOnWebFunctions.Services;
 
 internal class ServiceBusNotificationService : IDisposable
 {

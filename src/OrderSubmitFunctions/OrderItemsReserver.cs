@@ -2,15 +2,18 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using OrderSubmitFunctions.Services;
+using eShopOnWebFunctions.Services;
 
-namespace OrderSubmitFunctions;
+namespace eShopOnWebFunctions;
 
-public class OrderItemsResolver
+public class OrderItemsReserver
 {
-    private readonly ILogger<OrderItemsResolver> logger;
+    private readonly ILogger<OrderItemsReserver> logger;
 
-    private string ConnectionString => Environment.GetEnvironmentVariable("ServiceBusConnectionString");
+    private static string ServiceBusConnectionString => Environment.GetEnvironmentVariable("ServiceBusConnectionString");
+
+    private static string StorageConnectionString => Environment.GetEnvironmentVariable("AzureWebJobsStorage");
+
 
     private static string ContainerName => Environment.GetEnvironmentVariable("OrdersContainerName");
 
@@ -18,30 +21,30 @@ public class OrderItemsResolver
 
     private static string OrderBlobUploadFailureSubject => Environment.GetEnvironmentVariable("OrderBlobUploadFailureSubject");
 
-    public OrderItemsResolver(ILogger<OrderItemsResolver> logger)
+    public OrderItemsReserver(ILogger<OrderItemsReserver> logger)
     {
         this.logger = logger;
     }
 
-    [FunctionName("OrderItemsResolver")]
+    [FunctionName("OrderItemsReserver")]
     public async Task Run([ServiceBusTrigger("orders", "order-upload", Connection = "ServiceBusConnectionString")]string message)
     {
         try
         {
-            this.logger.LogInformation($"[OrderItemsResolver.Run] Trying to process order json to the blob container: {ContainerName} with connection string: {ConnectionString}...");
+            this.logger.LogInformation($"[OrderItemsReserver.Run] Trying to process order json to the blob container: {ContainerName} with connection string: {StorageConnectionString}...");
 
             // Error to test fallback Logic App
             // throw new Exception();
 
-            var blobService = new BlobContainerService(ConnectionString, ContainerName, logger);
+            var blobService = new BlobContainerService(StorageConnectionString, ContainerName, logger);
             var fileName = await blobService.Upload(message);
 
             this.logger.LogInformation($"The file: {fileName} is loaded successfully to the container: {ContainerName}");
         }
         catch (Exception ex)
         {
-            this.logger.LogError($"[OrderItemsResolver.Run] Error on blob upload: {ex.Message}");
-            var notificationService = new ServiceBusNotificationService(ConnectionString, TopicName, this.logger);
+            this.logger.LogError($"[OrderItemsReserver.Run] Error on blob upload: {ex.Message}");
+            var notificationService = new ServiceBusNotificationService(ServiceBusConnectionString, TopicName, this.logger);
             await notificationService.SendMessage(message, OrderBlobUploadFailureSubject);
         }
     }

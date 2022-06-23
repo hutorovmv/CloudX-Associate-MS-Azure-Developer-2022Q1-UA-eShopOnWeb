@@ -7,13 +7,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using OrderSubmitFunctions.Services;
-using OrderSubmitFunctions.Models;
+using eShopOnWebFunctions.Services;
+using eShopOnWebFunctions.Models;
 using Microsoft.Azure.Cosmos;
+using System.Text.RegularExpressions;
 
-namespace OrderSubmitFunctions;
+namespace eShopOnWebFunctions;
 
-public static class OrderItemsCosmosDbResolver
+public static class DeliveryItemsProcessor
 {
     private static string EndpointUri => Environment.GetEnvironmentVariable("EndpointUri");
 
@@ -25,16 +26,16 @@ public static class OrderItemsCosmosDbResolver
 
     private static string PartitionKeyPath => Environment.GetEnvironmentVariable("PartitionKeyPath");
 
-    [FunctionName("OrderItemsCosmosDbResolver")]
+    [FunctionName("DeliveryItemsProcessor")]
     public static async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Admin, "post", Route = null)] HttpRequest req,
         ILogger logger)
     {
         try
         {
-            logger.LogInformation($"[OrderItemsCosmosDbResolver.Run] Trying to process order json to cosmosdb container: {ContainerName} with endpointUrl: {EndpointUri}...");
+            logger.LogInformation($"[DeliveryItemsProcessor.Run] Trying to process order json to cosmosdb container: {ContainerName} with endpointUrl: {EndpointUri}...");
 
-            logger.LogDebug($"[OrderItemsCosmosDbResolver.Run] Trying to read request body and deserialize it...");
+            logger.LogDebug($"[DeliveryItemsProcessor.Run] Trying to read request body and deserialize it...");
             var orderModel = await GetOrderFromStream(req.Body);
 
             var cosmosContainerService = new CosmosDbContainerService(
@@ -51,7 +52,7 @@ public static class OrderItemsCosmosDbResolver
         }
         catch (Exception ex)
         {
-            logger.LogError($"[OrderItemsCosmosDbResolver.Run] Error: {ex.Message}");
+            logger.LogError($"[DeliveryItemsProcessor.Run] Error: {ex.Message}");
             return new NoContentResult();
         }
     }

@@ -4,7 +4,7 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace OrderSubmitFunctions.Services;
+namespace eShopOnWebFunctions.Services;
 
 internal class CosmosDbContainerService : IDisposable
 {
@@ -23,7 +23,7 @@ internal class CosmosDbContainerService : IDisposable
         string databaseName,
         string containerName,
         string partitionKeyPath,
-        int throughput = 10000
+        int throughput = 4000
     )
     {
         this.logger = logger;
@@ -50,7 +50,7 @@ internal class CosmosDbContainerService : IDisposable
 
     private async Task<Database> GetDatabaseAsync()
     {
-        var databaseResponse = await this.client.CreateDatabaseAsync(this.databaseName);
+        var databaseResponse = await this.client.CreateDatabaseIfNotExistsAsync(this.databaseName);
         return databaseResponse.Database;
     }
 

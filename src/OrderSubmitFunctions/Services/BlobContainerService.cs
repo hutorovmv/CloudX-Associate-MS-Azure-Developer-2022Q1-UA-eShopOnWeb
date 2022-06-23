@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Microsoft.Extensions.Logging;
 
-namespace OrderSubmitFunctions.Services;
+namespace eShopOnWebFunctions.Services;
 
 internal class BlobContainerService
 {
@@ -45,7 +45,7 @@ internal class BlobContainerService
 
     public async Task<string> Upload(Stream stream)
     {
-        var fileName = DateTime.UtcNow.ToString("O");
+        var fileName = GenerateTextFileName();
 
         this.logger.LogDebug($"[BlobContainerService.Upload] Trying to upload order file: {fileName} from a stream...");
         await this.Upload(stream, fileName);
@@ -61,7 +61,7 @@ internal class BlobContainerService
 
     public async Task<string> Upload(string text)
     {
-        var fileName = DateTime.UtcNow.ToString("O");
+        var fileName = GenerateTextFileName();
 
         this.logger.LogDebug($"[BlobContainerService.Upload] Trying to upload order file: {fileName} from a string...");
         await this.Upload(text, fileName);
@@ -88,5 +88,15 @@ internal class BlobContainerService
         await this.containerClient.CreateIfNotExistsAsync();
         var blobClient = this.containerClient.GetBlobClient(fileName);       
         await blobClient.UploadAsync(memoryStream);
+    }
+
+    private string GetTimestamp()
+    {
+        return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString();
+    }
+
+    private string GenerateTextFileName()
+    {
+        return $"{GetTimestamp()}.txt";
     }
 }
