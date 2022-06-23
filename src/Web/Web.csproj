@@ -9,6 +9,7 @@
     <LangVersion>latest</LangVersion>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
+    <ApplicationInsightsResourceId>/subscriptions/28432c80-0885-44ab-806a-434f3e562b41/resourceGroups/rg-shop-eshoponweb-work-dev-westeu/providers/microsoft.insights/components/web-application-insights</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +28,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.4" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.3" />
-    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.161" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.4" />

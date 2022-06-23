@@ -16,12 +16,14 @@ using Microsoft.eShopWeb.Web;
 using Microsoft.eShopWeb.Web.Configuration;
 using Microsoft.eShopWeb.Web.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Logging.AddConsole();
+
 builder.Logging.AddApplicationInsights();
 
 Microsoft.eShopWeb.Infrastructure.Dependencies.ConfigureServices(builder.Configuration, builder.Services);
@@ -162,7 +164,7 @@ if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docke
 else
 {
     app.Logger.LogInformation("Adding non-Development middleware...");
-    app.UseExceptionHandler("/Error");
+    //app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 

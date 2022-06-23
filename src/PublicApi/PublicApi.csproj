@@ -6,6 +6,7 @@
     <UserSecretsId>5b662463-1efd-4bae-bde4-befe0be3e8ff</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
+    <ApplicationInsightsResourceId>/subscriptions/28432c80-0885-44ab-806a-434f3e562b41/resourceGroups/rg-shop-eshoponweb-work-dev-westeu/providers/microsoft.insights/components/public-api-application-insights</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>
