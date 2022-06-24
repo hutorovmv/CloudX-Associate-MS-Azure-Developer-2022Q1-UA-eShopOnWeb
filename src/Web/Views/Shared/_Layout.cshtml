@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Microsoft.eShopOnWeb</title>
+    <title>@ViewData["Title"] - Microsoft.eShopOnWeb - Slot: @Environment.GetEnvironmentVariable("SlotName") - Instance: @Environment.GetEnvironmentVariable("InstanceName")</title>
     <environment names="Development,Docker">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/app.css" />
@@ -37,6 +37,7 @@
                 </article>
             </div>
         </header>
+        Slot: @Environment.GetEnvironmentVariable("SlotName") - Instance: @Environment.GetEnvironmentVariable("InstanceName")
         @RenderBody()
         <footer class="esh-app-footer footer">
             <div class="container">
